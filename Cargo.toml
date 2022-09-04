@@ -1,0 +1,11 @@
+[package]
+name = "indexed_string"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+libc="0.2"
+indexed_data_file={ path="../indexed_data_file" , version="0.1" }
+strings_set_file={ path="../strings_set_file" , version="0.1" }
