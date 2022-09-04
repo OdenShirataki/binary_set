@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "indexed_string"
+name = "indexed_string_file"
 version = "0.1.0"
 dependencies = [
  "indexed_data_file",

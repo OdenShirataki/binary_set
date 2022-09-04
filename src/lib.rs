@@ -2,15 +2,15 @@ use std::cmp::Ordering;
 use indexed_data_file::*;
 use strings_set_file::*;
 
-pub struct IndexedString{
+pub struct IndexedStringFile{
     index: IndexedDataFile<WordAddress>
     ,strings:StringsSetFile
 }
-impl IndexedString{
-    pub fn new(path_prefix:&str) -> Result<IndexedString,std::io::Error>{
+impl IndexedStringFile{
+    pub fn new(path_prefix:&str) -> Result<IndexedStringFile,std::io::Error>{
         let index=IndexedDataFile::new(&(path_prefix.to_string()+".i"))?;
         let strings=StringsSetFile::new(&(path_prefix.to_string()+".d"))?;
-        Ok(IndexedString{
+        Ok(IndexedStringFile{
             index
             ,strings
         })
