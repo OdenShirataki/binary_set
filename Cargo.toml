@@ -3,7 +3,14 @@ name = "indexed_string"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["Oden Shirataki <oden.srtk@gmail.com>"]
+
+description = "Indexed string file. It uses mmap , strings_set_file and tri-avltree."
+
+repository = "https://github.com/OdenShirataki/indexed_data_file"
+
+keywords = ["index","file","avltree","memmap","database"]
+license = "MIT"
 
 [dependencies]
 libc="0.2"
