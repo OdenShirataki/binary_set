@@ -16,7 +16,7 @@ impl IndexedStringFile{
         })
     }
     pub fn into_string(&self,id:i64)->String{
-        match self.index.tree().entity_data(id){
+        match self.index.tree().entity_value(id){
             Some(word)=>self.strings.to_str(word).to_string()
             ,None=>"".to_owned()
         }
