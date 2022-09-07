@@ -11,7 +11,7 @@ dependencies = [
 
 [[package]]
 name = "indexed_data_file"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "file_mmap",
  "tri_avltree",
@@ -19,7 +19,7 @@ dependencies = [
 
 [[package]]
 name = "indexed_string_file"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "indexed_data_file",
  "libc",
@@ -56,7 +56,7 @@ dependencies = [
 
 [[package]]
 name = "tri_avltree"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "rustc-hash",
 ]
