@@ -1,11 +1,11 @@
 [package]
 name = "indexed_string_file"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 
 authors = ["Oden Shirataki <oden.srtk@gmail.com>"]
 
-description = "Indexed string file. It uses mmap , strings_set_file and tri-avltree."
+description = "Indexed string file. It uses mmap , strings_set_file and avltiree."
 
 repository = "https://github.com/OdenShirataki/indexed_data_file"
 
@@ -14,5 +14,5 @@ license = "MIT"
 
 [dependencies]
 libc="0.2"
-indexed_data_file={ path="../indexed_data_file" , version="0.4" }
+indexed_data_file={ path="../indexed_data_file" , version="0.5" }
 strings_set_file={ path="../strings_set_file" , version="0.1" }

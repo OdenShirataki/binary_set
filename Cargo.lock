@@ -3,6 +3,13 @@
 version = 3
 
 [[package]]
+name = "avltriee"
+version = "0.5.0"
+dependencies = [
+ "rustc-hash",
+]
+
+[[package]]
 name = "file_mmap"
 version = "0.1.1"
 dependencies = [
@@ -13,8 +20,8 @@ dependencies = [
 name = "indexed_data_file"
 version = "0.4.0"
 dependencies = [
+ "avltriee",
  "file_mmap",
- "tri_avltree",
 ]
 
 [[package]]
@@ -52,11 +59,4 @@ name = "strings_set_file"
 version = "0.1.0"
 dependencies = [
  "file_mmap",
-]
-
-[[package]]
-name = "tri_avltree"
-version = "0.4.0"
-dependencies = [
- "rustc-hash",
 ]
