@@ -51,7 +51,7 @@ impl IndexedStringFile{
             Some(found_id)
         }else{
             if let Some(ystr)=self.strings.insert(target){
-                self.index.add_new(ystr.address(),found_id,ord)
+                self.index.insert_unique(ystr.address(),found_id,ord)
             }else{
                 None
             }
