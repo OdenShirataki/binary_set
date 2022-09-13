@@ -4,7 +4,7 @@ version = 3
 
 [[package]]
 name = "avltriee"
-version = "0.6.1"
+version = "0.6.2"
 dependencies = [
  "rustc-hash",
 ]
@@ -18,7 +18,7 @@ dependencies = [
 
 [[package]]
 name = "indexed_data_file"
-version = "0.6.1"
+version = "0.6.3"
 dependencies = [
  "avltriee",
  "file_mmap",
@@ -26,7 +26,7 @@ dependencies = [
 
 [[package]]
 name = "indexed_string_file"
-version = "0.6.1"
+version = "0.6.2"
 dependencies = [
  "indexed_data_file",
  "libc",
@@ -56,7 +56,7 @@ checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
 
 [[package]]
 name = "strings_set_file"
-version = "0.1.0"
+version = "0.1.2"
 dependencies = [
  "file_mmap",
 ]

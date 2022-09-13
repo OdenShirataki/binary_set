@@ -1,6 +1,6 @@
 [package]
 name = "indexed_string_file"
-version = "0.6.1"
+version = "0.6.2"
 edition = "2021"
 
 authors = ["Oden Shirataki <oden.srtk@gmail.com>"]
@@ -10,7 +10,7 @@ description = "Indexed string file. It uses mmap , strings_set_file and avltiree
 repository = "https://github.com/OdenShirataki/indexed_data_file"
 
 keywords = ["index","file","avltree","memmap","database"]
-license = "MIT"
+license = "MIT/Apache-2.0"
 
 [dependencies]
 libc="0.2"
