@@ -1,43 +1,37 @@
 use std::cmp::Ordering;
-use indexed_data_file::*;
-use strings_set_file::*;
+use idx_sized::IdxSized;
+use various_data_file::{
+    DataAddress
+    ,VariousDataFile
+};
 
-pub struct IndexedStringFile{
-    index: IndexedDataFile<WordAddress>
-    ,strings:StringsSetFile
+pub struct IdxBinary{
+    index: IdxSized<DataAddress>
+    ,strings:VariousDataFile
 }
-impl IndexedStringFile{
-    pub fn new(path_prefix:&str) -> Result<IndexedStringFile,std::io::Error>{
-        let index=IndexedDataFile::new(&(path_prefix.to_string()+".i"))?;
-        let strings=StringsSetFile::new(&(path_prefix.to_string()+".d"))?;
-        Ok(IndexedStringFile{
+impl IdxBinary{
+    pub fn new(path_prefix:&str) -> Result<IdxBinary,std::io::Error>{
+        let index=IdxSized::new(&(path_prefix.to_string()+".i"))?;
+        let strings=VariousDataFile::new(&(path_prefix.to_string()+".d"))?;
+        Ok(IdxBinary{
             index
             ,strings
         })
     }
     pub fn into_string(&self,id:u32)->String{
         match self.index.triee().entity_value(id){
-            Some(word)=>self.strings.to_str(word).to_string()
+            Some(word)=>{
+                std::str::from_utf8(self.strings.slice(word)).unwrap().to_string()
+            }
             ,None=>"".to_owned()
         }
     }
-    fn search(&self,target: &str)->(Ordering,u32){
-        let target_cstring=std::ffi::CString::new(target).unwrap();
+    fn search(&self,target: &[u8])->(Ordering,u32){
         self.index.triee().search_cb(|s|->Ordering{
-            let cmp=unsafe{libc::strcmp(
-                target_cstring.as_ptr()
-                ,self.strings.offset(s.offset() as isize)
-            ) as isize};
-            if cmp<0{
-                Ordering::Less
-            }else if cmp>0{
-                Ordering::Greater
-            }else{
-                Ordering::Equal
-            }
+            target.cmp(self.strings.slice(s))
         })
     }
-    pub fn id(&self,target: &str) -> Option<u32>{
+    pub fn id(&self,target: &[u8]) -> Option<u32>{
         let (ord,found_id)=self.search(target);
         if ord==Ordering::Equal && found_id!=0{
             Some(found_id)
@@ -45,7 +39,7 @@ impl IndexedStringFile{
             None
         }
     }
-    pub fn entry(&mut self,target: &str) -> Option<u32>{
+    pub fn entry(&mut self,target: &[u8]) -> Option<u32>{
         let (ord,found_id)=self.search(target);
         if ord==Ordering::Equal && found_id!=0{
             Some(found_id)

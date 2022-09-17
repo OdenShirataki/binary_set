@@ -11,26 +11,26 @@ dependencies = [
 
 [[package]]
 name = "file_mmap"
-version = "0.1.1"
+version = "0.3.0"
 dependencies = [
  "memmap2",
 ]
 
 [[package]]
-name = "indexed_data_file"
-version = "0.6.3"
+name = "idx_binary"
+version = "0.1.0"
 dependencies = [
- "avltriee",
- "file_mmap",
+ "idx_sized",
+ "libc",
+ "various_data_file",
 ]
 
 [[package]]
-name = "indexed_string_file"
-version = "0.6.2"
+name = "idx_sized"
+version = "0.1.0"
 dependencies = [
- "indexed_data_file",
- "libc",
- "strings_set_file",
+ "avltriee",
+ "file_mmap",
 ]
 
 [[package]]
@@ -55,8 +55,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
 
 [[package]]
-name = "strings_set_file"
-version = "0.1.2"
+name = "various_data_file"
+version = "0.1.0"
 dependencies = [
  "file_mmap",
 ]
