@@ -4,7 +4,7 @@ version = 3
 
 [[package]]
 name = "avltriee"
-version = "0.6.3"
+version = "0.8.1"
 dependencies = [
  "rustc-hash",
 ]
@@ -18,7 +18,7 @@ dependencies = [
 
 [[package]]
 name = "idx_binary"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "idx_sized",
  "libc",
@@ -27,7 +27,7 @@ dependencies = [
 
 [[package]]
 name = "idx_sized"
-version = "0.1.0"
+version = "0.8.1"
 dependencies = [
  "avltriee",
  "file_mmap",
@@ -56,7 +56,7 @@ checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
 
 [[package]]
 name = "various_data_file"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "file_mmap",
 ]

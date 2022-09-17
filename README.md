@@ -1,1 +1,1 @@
-# indexed_string
+# idx_binary
