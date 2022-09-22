@@ -45,7 +45,7 @@ impl IdxBinary{
             Some(found_id)
         }else{
             if let Some(ystr)=self.strings.insert(target){
-                self.index.insert_unique(ystr.address(),found_id,ord)
+                self.index.insert_unique(ystr.address(),found_id,ord,0)
             }else{
                 None
             }

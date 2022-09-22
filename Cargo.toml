@@ -1,6 +1,6 @@
 [package]
 name = "idx_binary"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 
 authors = ["Oden Shirataki <oden.srtk@gmail.com>"]
@@ -14,5 +14,5 @@ license = "MIT/Apache-2.0"
 
 [dependencies]
 libc="0.2"
-idx_sized={ path="../idx_sized" , version="0.8" }
+idx_sized={ path="../idx_sized" , version="0.9" }
 various_data_file={ path="../various_data_file" , version="0.2" }
