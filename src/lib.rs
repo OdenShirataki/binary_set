@@ -18,8 +18,8 @@ impl IdxBinary{
             ,strings
         })
     }
-    pub fn into_string(&self,id:u32)->String{
-        match self.index.triee().entity_value(id){
+    pub fn into_string(&self,row:u32)->String{
+        match self.index.triee().entity_value(row){
             Some(word)=>{
                 std::str::from_utf8(self.strings.slice(word)).unwrap().to_string()
             }
@@ -31,21 +31,21 @@ impl IdxBinary{
             target.cmp(self.strings.slice(s))
         })
     }
-    pub fn id(&self,target: &[u8]) -> Option<u32>{
-        let (ord,found_id)=self.search(target);
-        if ord==Ordering::Equal && found_id!=0{
-            Some(found_id)
+    pub fn row(&self,target: &[u8]) -> Option<u32>{
+        let (ord,found_row)=self.search(target);
+        if ord==Ordering::Equal && found_row!=0{
+            Some(found_row)
         }else{
             None
         }
     }
     pub fn entry(&mut self,target: &[u8]) -> Option<u32>{
-        let (ord,found_id)=self.search(target);
-        if ord==Ordering::Equal && found_id!=0{
-            Some(found_id)
+        let (ord,found_row)=self.search(target);
+        if ord==Ordering::Equal && found_row!=0{
+            Some(found_row)
         }else{
             if let Some(ystr)=self.strings.insert(target){
-                self.index.insert_unique(ystr.address(),found_id,ord,0)
+                self.index.insert_unique(ystr.address(),found_row,ord,0)
             }else{
                 None
             }
