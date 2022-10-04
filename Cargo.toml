@@ -10,6 +10,7 @@ description = "Indexed string file. It uses mmap , strings_set_file and avltiree
 repository = "https://github.com/OdenShirataki/idx_binary"
 
 keywords = ["index","file","avltree","memmap","database"]
+categories = ["database","caching"]
 license = "MIT/Apache-2.0"
 
 [dependencies]
