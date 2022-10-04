@@ -19,10 +19,9 @@ dependencies = [
 
 [[package]]
 name = "idx_binary"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "idx_sized",
- "libc",
  "various_data_file",
 ]
 

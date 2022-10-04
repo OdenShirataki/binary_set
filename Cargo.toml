@@ -1,6 +1,6 @@
 [package]
 name = "idx_binary"
-version = "0.3.2"
+version = "0.3.3"
 edition = "2021"
 
 authors = ["Oden Shirataki <oden.srtk@gmail.com>"]
@@ -13,6 +13,5 @@ keywords = ["index","file","avltree","memmap","database"]
 license = "MIT/Apache-2.0"
 
 [dependencies]
-libc="0.2"
 idx_sized="0.10"
 various_data_file="0.3"
