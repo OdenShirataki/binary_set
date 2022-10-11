@@ -19,7 +19,7 @@ impl IdxBinary{
         })
     }
     pub fn into_string(&self,row:u32)->String{
-        match self.index.triee().entity_value(row){
+        match self.index.triee().value(row){
             Some(word)=>{
                 std::str::from_utf8(self.strings.slice(word)).unwrap().to_string()
             }
