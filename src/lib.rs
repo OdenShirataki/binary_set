@@ -18,13 +18,16 @@ impl IdxBinary{
             ,strings
         })
     }
-    pub fn into_string(&self,row:u32)->String{
+    pub fn str(&self,row:u32)->&str{
         match self.index.triee().value(row){
             Some(word)=>{
-                std::str::from_utf8(self.strings.slice(word)).unwrap().to_string()
+                std::str::from_utf8(self.strings.slice(word)).unwrap()
             }
-            ,None=>"".to_owned()
+            ,None=>""
         }
+    }
+    pub fn string(&self,row:u32)->String{
+        self.str(row).to_string()
     }
     fn search(&self,target: &[u8])->(Ordering,u32){
         self.index.triee().search_cb(|s|->Ordering{
