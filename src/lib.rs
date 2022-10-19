@@ -20,7 +20,7 @@ impl IdxBinary{
     }
     pub fn bytes(&self,row:u32)->&[u8]{
         match self.index.triee().value(row){
-            Some(word)=>self.data.slice(word)
+            Some(word)=>self.data.bytes(word)
             ,None=>b""
         }
     }
@@ -32,7 +32,7 @@ impl IdxBinary{
     }
     fn search(&self,target: &[u8])->(Ordering,u32){
         self.index.triee().search_cb(|s|->Ordering{
-            target.cmp(self.data.slice(s))
+            target.cmp(self.data.bytes(s))
         })
     }
     pub fn row(&self,target: &[u8]) -> Option<u32>{
