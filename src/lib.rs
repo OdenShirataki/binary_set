@@ -27,9 +27,6 @@ impl IdxBinary{
     pub fn str(&self,row:u32)->&str{
         std::str::from_utf8(self.bytes(row)).unwrap()
     }
-    pub fn string(&self,row:u32)->String{
-        self.str(row).to_string()
-    }
     fn search(&self,target: &[u8])->(Ordering,u32){
         self.index.triee().search_cb(|s|->Ordering{
             target.cmp(self.data.bytes(s))
