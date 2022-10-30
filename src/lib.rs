@@ -10,7 +10,7 @@ pub struct IdxBinary{
     ,data:VariousDataFile
 }
 impl IdxBinary{
-    pub fn new(path_prefix:&str) -> Result<IdxBinary,std::io::Error>{
+    pub fn new(path_prefix:&str)->Result<Self,std::io::Error>{
         let index=IdxSized::new(&(path_prefix.to_string()+".i"))?;
         let data=VariousDataFile::new(&(path_prefix.to_string()+".d"))?;
         Ok(IdxBinary{
@@ -32,7 +32,7 @@ impl IdxBinary{
             target.cmp(self.data.bytes(s))
         })
     }
-    pub fn row(&self,target: &[u8]) -> Option<u32>{
+    pub fn row(&self,target: &[u8])->Option<u32>{
         let (ord,found_row)=self.search(target);
         if ord==Ordering::Equal && found_row!=0{
             Some(found_row)
@@ -40,17 +40,15 @@ impl IdxBinary{
             None
         }
     }
-    pub fn entry(&mut self,target: &[u8]) -> Option<u32>{
+    pub fn entry(&mut self,target: &[u8])->Result<u32,std::io::Error>{
         let (ord,found_row)=self.search(target);
         if ord==Ordering::Equal && found_row!=0{
-            Some(found_row)
+            Ok(found_row)
         }else{
-            match self.data.insert(target){
-                Some(data)=>self.index.insert_unique(
-                    data.address(),found_row,ord,0
-                )
-                ,None=>None
-            }
+            let data=self.data.insert(target)?;
+            self.index.insert_unique(
+                data.address(),found_row,ord,0
+            )
         }
     }
 }
