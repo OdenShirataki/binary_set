@@ -52,3 +52,27 @@ impl IdxBinary{
         }
     }
 }
+
+#[test]
+fn test(){
+    let dir="./ib-test";
+    if std::path::Path::new(dir).exists(){
+        std::fs::remove_dir_all(dir).unwrap();
+        std::fs::create_dir_all(dir).unwrap();
+    }else{
+        std::fs::create_dir_all(dir).unwrap();
+    }
+    if let Ok(mut s)=IdxBinary::new(&(dir.to_owned()+"/test")){
+        s.entry(b"US").unwrap();
+        s.entry(b"US").unwrap();
+
+        s.entry(b"US").unwrap();
+        s.entry(b"US").unwrap();
+        
+        s.entry(b"UK").unwrap();
+
+        s.entry(b"US").unwrap();
+        s.entry(b"US").unwrap();
+        s.entry(b"UK").unwrap();
+    }
+}
