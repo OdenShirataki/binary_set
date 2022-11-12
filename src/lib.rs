@@ -18,18 +18,20 @@ impl IdxBinary{
             ,data
         })
     }
-    pub fn bytes(&self,row:u32)->&[u8]{
+    pub unsafe fn bytes(&self,row:u32)->&[u8]{
         match self.index.triee().value(row){
             Some(word)=>self.data.bytes(word)
             ,None=>b""
         }
     }
-    pub fn str(&self,row:u32)->&str{
+    pub unsafe fn str(&self,row:u32)->&str{
         std::str::from_utf8(self.bytes(row)).unwrap()
     }
     fn search(&self,target: &[u8])->(Ordering,u32){
         self.index.triee().search_cb(|s|->Ordering{
-            target.cmp(self.data.bytes(s))
+            target.cmp(unsafe{
+                self.data.bytes(s)
+            })
         })
     }
     pub fn row(&self,target: &[u8])->Option<u32>{
