@@ -49,7 +49,7 @@ impl IdxBinary{
         }else{
             let data=self.data.insert(target)?;
             self.index.insert_unique(
-                data.address(),found_row,ord,0
+                data.address().clone(),found_row,ord,0
             )
         }
     }
