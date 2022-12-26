@@ -1,5 +1,5 @@
 use idx_sized::IdxSized;
-use std::cmp::Ordering;
+use std::{cmp::Ordering, io};
 use various_data_file::{DataAddress, VariousDataFile};
 
 pub struct IdxBinary {
@@ -7,7 +7,7 @@ pub struct IdxBinary {
     data: VariousDataFile,
 }
 impl IdxBinary {
-    pub fn new(path_prefix: &str) -> Result<Self, std::io::Error> {
+    pub fn new(path_prefix: &str) -> io::Result<Self> {
         let index = IdxSized::new(&(path_prefix.to_string() + ".i"))?;
         let data = VariousDataFile::new(&(path_prefix.to_string() + ".d"))?;
         Ok(IdxBinary { index, data })
@@ -34,7 +34,7 @@ impl IdxBinary {
             None
         }
     }
-    pub fn entry(&mut self, target: &[u8]) -> Result<u32, std::io::Error> {
+    pub fn entry(&mut self, target: &[u8]) -> io::Result<u32> {
         let (ord, found_row) = self.search(target);
         if ord == Ordering::Equal && found_row != 0 {
             Ok(found_row)
