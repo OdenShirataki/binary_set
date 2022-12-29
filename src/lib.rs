@@ -1,5 +1,5 @@
 use idx_sized::IdxSized;
-use std::{cmp::Ordering, io};
+use std::{cmp::Ordering, io, path::Path};
 use various_data_file::{DataAddress, VariousDataFile};
 
 pub struct IdxBinary {
@@ -7,10 +7,24 @@ pub struct IdxBinary {
     data: VariousDataFile,
 }
 impl IdxBinary {
-    pub fn new(path_prefix: &str) -> io::Result<Self> {
-        let index = IdxSized::new(&(path_prefix.to_string() + ".i"))?;
-        let data = VariousDataFile::new(&(path_prefix.to_string() + ".d"))?;
-        Ok(IdxBinary { index, data })
+    pub fn new<P: AsRef<Path>>(path: P) -> io::Result<Self> {
+        let path = path.as_ref();
+        let file_name_prefix = if let Some(file_name) = path.file_name() {
+            file_name.to_string_lossy().into_owned()
+        } else {
+            "".to_owned()
+        };
+
+        let mut indx_file_name = path.to_path_buf();
+        indx_file_name.set_file_name(&(file_name_prefix.to_owned() + ".i"));
+
+        let mut data_file_name = path.to_path_buf();
+        data_file_name.set_file_name(&(file_name_prefix + ".d"));
+
+        Ok(IdxBinary {
+            index: IdxSized::new(indx_file_name)?,
+            data: VariousDataFile::new(data_file_name)?,
+        })
     }
     pub unsafe fn bytes(&self, row: u32) -> &[u8] {
         match self.index.triee().value(row) {
