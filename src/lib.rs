@@ -1,5 +1,5 @@
 use idx_sized::IdxSized;
-use std::{cmp::Ordering, io, path::Path};
+use std::{cmp::Ordering, io, path::Path, str::Utf8Error};
 use various_data_file::{DataAddress, VariousDataFile};
 
 pub struct IdxBinary {
@@ -33,8 +33,8 @@ impl IdxBinary {
             None => b"",
         }
     }
-    pub unsafe fn str(&self, row: u32) -> &str {
-        std::str::from_utf8(self.bytes(row)).unwrap()
+    pub unsafe fn str(&self, row: u32) -> Result<&str, Utf8Error> {
+        std::str::from_utf8(self.bytes(row))
     }
     fn search(&self, target: &[u8]) -> (Ordering, u32) {
         self.index
