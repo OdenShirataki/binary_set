@@ -9,21 +9,22 @@ pub struct IdxBinary {
 impl IdxBinary {
     pub fn new<P: AsRef<Path>>(path: P) -> io::Result<Self> {
         let path = path.as_ref();
-        let file_name_prefix = if let Some(file_name) = path.file_name() {
-            file_name.to_string_lossy().into_owned()
+        let file_name = if let Some(file_name) = path.file_name() {
+            file_name.to_string_lossy()
         } else {
-            "".to_owned()
+            "".into()
         };
-
-        let mut indx_file_name = path.to_path_buf();
-        indx_file_name.set_file_name(&(file_name_prefix.to_owned() + ".i"));
-
-        let mut data_file_name = path.to_path_buf();
-        data_file_name.set_file_name(&(file_name_prefix + ".d"));
-
         Ok(IdxBinary {
-            index: IdxSized::new(indx_file_name)?,
-            data: VariousDataFile::new(data_file_name)?,
+            index: IdxSized::new({
+                let mut path = path.to_path_buf();
+                path.set_file_name(&(file_name.to_string() + ".i"));
+                path
+            })?,
+            data: VariousDataFile::new({
+                let mut path = path.to_path_buf();
+                path.set_file_name(&(file_name.into_owned() + ".d"));
+                path
+            })?,
         })
     }
     pub unsafe fn bytes(&self, row: u32) -> &[u8] {
