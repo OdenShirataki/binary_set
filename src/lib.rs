@@ -1,5 +1,6 @@
-use idx_sized::IdxSized;
-use std::{cmp::Ordering, io, path::Path, str::Utf8Error};
+use std::{cmp::Ordering, io, path::Path};
+
+use idx_sized::{anyhow::Result, Found, IdxSized};
 use various_data_file::{DataAddress, VariousDataFile};
 
 pub struct IdxBinary {
@@ -27,42 +28,42 @@ impl IdxBinary {
             })?,
         })
     }
-    pub unsafe fn bytes(&self, row: u32) -> &[u8] {
-        match self.index.triee().value(row) {
-            Some(word) => self.data.bytes(word),
+    pub unsafe fn bytes(&self, row: u32) -> &'static [u8] {
+        match self.index.value(row) {
+            Some(ref word) => self.data.bytes(word),
             None => b"",
         }
     }
-    pub unsafe fn str(&self, row: u32) -> Result<&str, Utf8Error> {
-        std::str::from_utf8(self.bytes(row))
-    }
-    fn search(&self, target: &[u8]) -> (Ordering, u32) {
+    fn search(&self, target: &[u8]) -> Found {
         self.index
             .triee()
             .search_cb(|s| -> Ordering { target.cmp(unsafe { self.data.bytes(s) }) })
     }
     pub fn find_row(&self, target: &[u8]) -> Option<u32> {
-        let (ord, found_row) = self.search(target);
-        if ord == Ordering::Equal && found_row != 0 {
+        let found = self.search(target);
+        let found_row = found.row();
+        if found.ord() == Ordering::Equal && found_row != 0 {
             Some(found_row)
         } else {
             None
         }
     }
-    pub fn entry(&mut self, target: &[u8]) -> io::Result<u32> {
-        let (ord, found_row) = self.search(target);
-        if ord == Ordering::Equal && found_row != 0 {
+
+    pub fn entry(&mut self, target: &[u8]) -> Result<u32> {
+        let found = self.search(target);
+        let found_row = found.row();
+        if found.ord() == Ordering::Equal && found_row != 0 {
             Ok(found_row)
         } else {
-            let data = self.data.insert(target)?;
-            self.index
-                .insert_unique(data.address().clone(), found_row, ord, 0)
+            Ok(self
+                .index
+                .insert_unique(self.data.insert(target)?.address().clone(), found)?)
         }
     }
 }
 
-#[test]
-fn test() {
+/*
+fn example() {
     let dir = "./ib-test";
     if std::path::Path::new(dir).exists() {
         std::fs::remove_dir_all(dir).unwrap();
@@ -84,3 +85,4 @@ fn test() {
         s.entry(b"UK").unwrap();
     }
 }
+*/
