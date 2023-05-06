@@ -37,7 +37,7 @@ impl IdxBinary {
     fn search(&self, target: &[u8]) -> Found {
         self.index
             .triee()
-            .search_cb(|s| -> Ordering { target.cmp(unsafe { self.data.bytes(s) }) })
+            .search(|s| unsafe { self.data.bytes(s) }.cmp(target))
     }
     pub fn find_row(&self, target: &[u8]) -> Option<u32> {
         let found = self.search(target);
@@ -61,28 +61,3 @@ impl IdxBinary {
         }
     }
 }
-
-/*
-fn example() {
-    let dir = "./ib-test";
-    if std::path::Path::new(dir).exists() {
-        std::fs::remove_dir_all(dir).unwrap();
-        std::fs::create_dir_all(dir).unwrap();
-    } else {
-        std::fs::create_dir_all(dir).unwrap();
-    }
-    if let Ok(mut s) = IdxBinary::new(&(dir.to_owned() + "/test")) {
-        s.entry(b"US").unwrap();
-        s.entry(b"US").unwrap();
-
-        s.entry(b"US").unwrap();
-        s.entry(b"US").unwrap();
-
-        s.entry(b"UK").unwrap();
-
-        s.entry(b"US").unwrap();
-        s.entry(b"US").unwrap();
-        s.entry(b"UK").unwrap();
-    }
-}
-*/
