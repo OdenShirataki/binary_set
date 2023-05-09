@@ -37,7 +37,7 @@ impl IdxBinary {
     fn search(&self, target: &[u8]) -> Found {
         self.index
             .triee()
-            .search(|s| unsafe { self.data.bytes(s) }.cmp(target))
+            .search_nord(|s| unsafe { self.data.bytes(s) }.cmp(target))
     }
     pub fn find_row(&self, target: &[u8]) -> Option<u32> {
         let found = self.search(target);
@@ -49,15 +49,15 @@ impl IdxBinary {
         }
     }
 
-    pub fn entry(&mut self, target: &[u8]) -> Result<u32> {
-        let found = self.search(target);
+    pub fn entry(&mut self, content: &[u8]) -> Result<u32> {
+        let found = self.search(content);
         let found_row = found.row();
         if found.ord() == Ordering::Equal && found_row != 0 {
             Ok(found_row)
         } else {
             Ok(self
                 .index
-                .insert_unique(self.data.insert(target)?.address().clone(), found)?)
+                .insert_nord(|| Ok(self.data.insert(content)?.address().clone()), found)?)
         }
     }
 }
