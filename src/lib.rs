@@ -1,10 +1,10 @@
 use std::{cmp::Ordering, io, path::Path};
 
-use idx_sized::{anyhow::Result, Found, IdxSized};
+use idx_file::{anyhow::Result, Found, IdxFile};
 use various_data_file::{DataAddress, VariousDataFile};
 
 pub struct IdxBinary {
-    index: IdxSized<DataAddress>,
+    index: IdxFile<DataAddress>,
     data: VariousDataFile,
 }
 impl IdxBinary {
@@ -16,7 +16,7 @@ impl IdxBinary {
             "".into()
         };
         Ok(IdxBinary {
-            index: IdxSized::new({
+            index: IdxFile::new({
                 let mut path = path.to_path_buf();
                 path.set_file_name(&(file_name.to_string() + ".i"));
                 path
@@ -37,7 +37,7 @@ impl IdxBinary {
     fn search(&self, target: &[u8]) -> Found {
         self.index
             .triee()
-            .search_nord(|s| unsafe { self.data.bytes(s) }.cmp(target))
+            .search_uord(|s| unsafe { self.data.bytes(s) }.cmp(target))
     }
     pub fn find_row(&self, target: &[u8]) -> Option<u32> {
         let found = self.search(target);
@@ -57,7 +57,7 @@ impl IdxBinary {
         } else {
             Ok(self
                 .index
-                .insert_nord(|| Ok(self.data.insert(content)?.address().clone()), found)?)
+                .insert_unique(self.data.insert(content)?.address().clone(), found)?)
         }
     }
 }
