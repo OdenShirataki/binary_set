@@ -55,9 +55,14 @@ impl IdxBinary {
         if found.ord() == Ordering::Equal && found_row != 0 {
             Ok(found_row)
         } else {
-            Ok(self
-                .index
-                .insert_unique(self.data.insert(content)?.address().clone(), found)?)
+            let row = self.index.new_row(0)?;
+            let value = self.data.insert(content)?;
+            unsafe {
+                self.index
+                    .triee_mut()
+                    .insert_unique(row, value.address().clone(), found);
+            }
+            Ok(row)
         }
     }
 }
