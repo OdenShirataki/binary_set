@@ -1,13 +1,13 @@
 [package]
-name = "idx_binary"
-version = "0.13.5"
+name = "binary_set"
+version = "0.1.0"
 edition = "2021"
 
 authors = ["Oden Shirataki <oden.srtk@gmail.com>"]
 
-description = "Indexed string file. It uses mmap , strings_set_file and avltiree."
+description = "Binary set file."
 
-repository = "https://github.com/OdenShirataki/idx_binary"
+repository = "https://github.com/OdenShirataki/binary_set"
 
 keywords = ["index","file","avltree","memmap","database"]
 categories = ["algorithms","caching","filesystem"]
