@@ -35,14 +35,14 @@ impl BinarySet {
         }
     }
 
-    fn search(&self, target: &[u8]) -> Found {
+    fn search_end(&self, target: &[u8]) -> Found {
         self.index
             .triee()
-            .search_uord(|s| unsafe { self.data_file.bytes(s) }.cmp(target))
+            .search_end(|s| unsafe { self.data_file.bytes(s) }.cmp(target))
     }
 
     pub fn row(&self, target: &[u8]) -> Option<u32> {
-        let found = self.search(target);
+        let found = self.search_end(target);
         let found_row = found.row();
         if found.ord() == Ordering::Equal && found_row != 0 {
             Some(found_row)
@@ -51,7 +51,7 @@ impl BinarySet {
         }
     }
     pub fn row_or_insert(&mut self, content: &[u8]) -> Result<u32> {
-        let found = self.search(content);
+        let found = self.search_end(content);
         let found_row = found.row();
         if found.ord() == Ordering::Equal && found_row != 0 {
             Ok(found_row)
