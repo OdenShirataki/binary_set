@@ -37,7 +37,6 @@ impl BinarySet {
 
     fn search_end(&self, target: &[u8]) -> Found {
         self.index
-            .triee()
             .search_end(|s| unsafe { self.data_file.bytes(s) }.cmp(target))
     }
 
@@ -60,7 +59,6 @@ impl BinarySet {
             let value = self.data_file.insert(content)?;
             unsafe {
                 self.index
-                    .triee_mut()
                     .insert_unique(row, value.address().clone(), found);
             }
             Ok(row)
