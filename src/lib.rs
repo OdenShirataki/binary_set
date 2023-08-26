@@ -10,11 +10,7 @@ pub struct BinarySet {
 impl BinarySet {
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         let path = path.as_ref();
-        let file_name = if let Some(file_name) = path.file_name() {
-            file_name.to_string_lossy()
-        } else {
-            "".into()
-        };
+        let file_name = path.file_name().map_or("".into(), |f| f.to_string_lossy());
         Self {
             index: IdxFile::new({
                 let mut path = path.to_path_buf();
@@ -29,25 +25,20 @@ impl BinarySet {
         }
     }
     pub unsafe fn bytes(&self, row: u32) -> &'static [u8] {
-        match self.index.value(row) {
-            Some(ref word) => self.data_file.bytes(word),
-            None => b"",
-        }
+        self.index
+            .value(row)
+            .map_or(b"", |v| self.data_file.bytes(v))
     }
 
     fn search_end(&self, target: &[u8]) -> Found {
         self.index
-            .search_end(|s| unsafe { self.data_file.bytes(s) }.cmp(target))
+            .search_end(|v| unsafe { self.data_file.bytes(v) }.cmp(target))
     }
 
     pub fn row(&self, target: &[u8]) -> Option<u32> {
         let found = self.search_end(target);
         let found_row = found.row();
-        if found.ord() == Ordering::Equal && found_row != 0 {
-            Some(found_row)
-        } else {
-            None
-        }
+        (found.ord() == Ordering::Equal && found_row != 0).then_some(found_row)
     }
     pub fn row_or_insert(&mut self, content: &[u8]) -> u32 {
         let found = self.search_end(content);
@@ -56,10 +47,12 @@ impl BinarySet {
             found_row
         } else {
             let row = self.index.new_row(0);
-            let value = self.data_file.insert(content);
             unsafe {
-                self.index
-                    .insert_unique(row, value.address().clone(), found);
+                self.index.insert_unique(
+                    row,
+                    self.data_file.insert(content).address().clone(),
+                    found,
+                );
             }
             row
         }
