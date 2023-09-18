@@ -24,22 +24,28 @@ impl BinarySet {
             }),
         }
     }
+
+    #[inline(always)]
     pub unsafe fn bytes(&self, row: u32) -> &'static [u8] {
         self.index
             .value(row)
             .map_or(b"", |v| self.data_file.bytes(v))
     }
 
+    #[inline(always)]
     fn search_end(&self, target: &[u8]) -> Found {
         self.index
             .search_end(|v| unsafe { self.data_file.bytes(v) }.cmp(target))
     }
 
+    #[inline(always)]
     pub fn row(&self, target: &[u8]) -> Option<u32> {
         let found = self.search_end(target);
         let found_row = found.row();
         (found.ord() == Ordering::Equal && found_row != 0).then_some(found_row)
     }
+
+    #[inline(always)]
     pub fn row_or_insert(&mut self, content: &[u8]) -> u32 {
         let found = self.search_end(content);
         let found_row = found.row();
