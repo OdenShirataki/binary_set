@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, path::Path};
+use std::{cmp::Ordering, num::NonZeroU32, path::Path};
 
 use idx_file::{Found, IdxFile};
 use various_data_file::{DataAddress, VariousDataFile};
@@ -46,16 +46,16 @@ impl BinarySet {
     }
 
     #[inline(always)]
-    pub fn row_or_insert(&mut self, content: &[u8]) -> u32 {
+    pub fn row_or_insert(&mut self, content: &[u8]) -> NonZeroU32 {
         let found = self.search_end(content);
         let found_row = found.row();
         if found.ord() == Ordering::Equal && found_row != 0 {
-            found_row
+            unsafe { NonZeroU32::new_unchecked(found_row) }
         } else {
             let row = self.index.create_row();
             unsafe {
                 self.index.insert_unique(
-                    row,
+                    row.get(),
                     self.data_file.insert(content).address().clone(),
                     found,
                 );
