@@ -52,7 +52,7 @@ impl BinarySet {
         if found.ord() == Ordering::Equal && found_row != 0 {
             found_row
         } else {
-            let row = self.index.new_row(0);
+            let row = self.index.create_row();
             unsafe {
                 self.index.insert_unique(
                     row,
