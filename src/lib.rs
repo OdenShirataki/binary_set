@@ -39,10 +39,11 @@ impl BinarySet {
     }
 
     #[inline(always)]
-    pub fn row(&self, target: &[u8]) -> Option<u32> {
+    pub fn row(&self, target: &[u8]) -> Option<NonZeroU32> {
         let found = self.search_end(target);
         let found_row = found.row();
-        (found.ord() == Ordering::Equal && found_row != 0).then_some(found_row)
+        (found.ord() == Ordering::Equal && found_row != 0)
+            .then_some(unsafe { NonZeroU32::new_unchecked(found_row) })
     }
 
     #[inline(always)]
@@ -55,7 +56,7 @@ impl BinarySet {
             let row = self.index.create_row();
             unsafe {
                 self.index.insert_unique(
-                    row.get(),
+                    row,
                     self.data_file.insert(content).address().clone(),
                     found,
                 );
