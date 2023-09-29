@@ -26,7 +26,7 @@ impl BinarySet {
     }
 
     #[inline(always)]
-    pub unsafe fn bytes(&self, row: u32) -> &'static [u8] {
+    pub unsafe fn bytes(&self, row: NonZeroU32) -> &'static [u8] {
         self.index
             .value(row)
             .map_or(b"", |v| self.data_file.bytes(v))
