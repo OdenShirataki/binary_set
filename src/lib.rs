@@ -8,15 +8,18 @@ pub struct BinarySet {
     data_file: VariousDataFile,
 }
 impl BinarySet {
-    pub fn new<P: AsRef<Path>>(path: P) -> Self {
+    pub fn new<P: AsRef<Path>>(path: P, allocation_lot: u32) -> Self {
         let path = path.as_ref();
         let file_name = path.file_name().map_or("".into(), |f| f.to_string_lossy());
         Self {
-            index: IdxFile::new({
-                let mut path = path.to_path_buf();
-                path.set_file_name(&(file_name.to_string() + ".i"));
-                path
-            }),
+            index: IdxFile::new(
+                {
+                    let mut path = path.to_path_buf();
+                    path.set_file_name(&(file_name.to_string() + ".i"));
+                    path
+                },
+                allocation_lot,
+            ),
             data_file: VariousDataFile::new({
                 let mut path = path.to_path_buf();
                 path.set_file_name(&(file_name.into_owned() + ".d"));
