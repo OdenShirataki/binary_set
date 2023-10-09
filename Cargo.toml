@@ -1,6 +1,6 @@
 [package]
 name = "binary_set"
-version = "0.9.0"
+version = "0.9.1"
 edition = "2021"
 
 authors = ["Oden Shirataki <oden.srtk@gmail.com>"]
@@ -14,5 +14,5 @@ categories = ["algorithms","caching","filesystem"]
 license = "MIT/Apache-2.0"
 
 [dependencies]
-various_data_file = { version = "0.12" , path = "../various_data_file" }
-idx_file = { version = "0.45" , path = "../idx_file" }
+various_data_file = { version = "0.13" , path = "../various_data_file" }
+idx_file = { version = "0.46" , path = "../idx_file" }
