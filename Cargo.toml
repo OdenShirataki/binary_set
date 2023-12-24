@@ -1,6 +1,6 @@
 [package]
 name = "binary_set"
-version = "0.9.3"
+version = "0.9.4"
 edition = "2021"
 
 authors = ["Oden Shirataki <oden.srtk@gmail.com>"]
@@ -9,10 +9,10 @@ description = "Binary set file."
 
 repository = "https://github.com/OdenShirataki/binary_set"
 
-keywords = ["index","file","avltree","memmap","database"]
-categories = ["algorithms","caching","filesystem"]
+keywords = ["index", "file", "avltree", "memmap", "database"]
+categories = ["algorithms", "caching", "filesystem"]
 license = "MIT/Apache-2.0"
 
 [dependencies]
-various_data_file = "0.13"
-idx_file = "0.46"
+various_data_file = "0.13.3"
+idx_file = { version = "0.47.0" }
