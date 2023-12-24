@@ -28,20 +28,17 @@ impl BinarySet {
         }
     }
 
-    #[inline(always)]
     pub unsafe fn bytes(&self, row: NonZeroU32) -> &'static [u8] {
         self.index
             .value(row)
             .map_or(b"", |v| self.data_file.bytes(v))
     }
 
-    #[inline(always)]
     fn search_end(&self, target: &[u8]) -> Found {
         self.index
             .search_end(|v| unsafe { self.data_file.bytes(v) }.cmp(target))
     }
 
-    #[inline(always)]
     pub fn row(&self, target: &[u8]) -> Option<NonZeroU32> {
         let found = self.search_end(target);
         let found_row = found.row();
@@ -49,7 +46,6 @@ impl BinarySet {
             .then_some(unsafe { NonZeroU32::new_unchecked(found_row) })
     }
 
-    #[inline(always)]
     pub fn row_or_insert(&mut self, content: &[u8]) -> NonZeroU32 {
         let found = self.search_end(content);
         let found_row = found.row();
