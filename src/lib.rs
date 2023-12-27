@@ -60,7 +60,7 @@ impl BinarySet {
         } else {
             let row = self.index.create_row();
             unsafe {
-                self.index.insert_unique(
+                self.index.insert_unique_unchecked(
                     row,
                     self.data_file.insert(content).address().clone(),
                     found,

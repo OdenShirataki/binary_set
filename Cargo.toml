@@ -1,6 +1,6 @@
 [package]
 name = "binary_set"
-version = "0.10.0"
+version = "0.10.1"
 edition = "2021"
 
 authors = ["Oden Shirataki <oden.srtk@gmail.com>"]
@@ -15,4 +15,4 @@ license = "MIT/Apache-2.0"
 
 [dependencies]
 various_data_file = { version = "0.14.0" }
-idx_file = { version = "0.47.0" }
+idx_file = { version = "0.48.0" }
