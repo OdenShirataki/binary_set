@@ -35,17 +35,12 @@ impl BinarySet {
 
     /// Returns the value of the specified row. Returns None if the row does not exist.
     pub fn bytes(&self, row: NonZeroU32) -> Option<&'static [u8]> {
-        self.index.value(row).map(|v| self.data_file.bytes(v))
-    }
-
-    fn search_end(&self, target: &[u8]) -> Found {
-        self.index
-            .search_end(|v| self.data_file.bytes(v).cmp(target))
+        self.index.get(row).map(|v| self.data_file.bytes(v))
     }
 
     /// Search for a sequence of bytes.
-    pub fn row(&self, target: &[u8]) -> Option<NonZeroU32> {
-        let found = self.search_end(target);
+    pub fn row(&self, content: &[u8]) -> Option<NonZeroU32> {
+        let found = self.search(content);
         let found_row = found.row();
         (found.ord() == Ordering::Equal && found_row != 0)
             .then_some(unsafe { NonZeroU32::new_unchecked(found_row) })
@@ -53,12 +48,12 @@ impl BinarySet {
 
     /// Finds a sequence of bytes, inserts it if it doesn't exist, and returns a row.
     pub fn row_or_insert(&mut self, content: &[u8]) -> NonZeroU32 {
-        let found = self.search_end(content);
+        let found = self.search(content);
         let found_row = found.row();
         if found.ord() == Ordering::Equal && found_row != 0 {
             unsafe { NonZeroU32::new_unchecked(found_row) }
         } else {
-            let row = self.index.create_row();
+            let row = unsafe { NonZeroU32::new_unchecked(self.index.rows_count() + 1) };
             unsafe {
                 self.index.insert_unique_unchecked(
                     row,
@@ -68,5 +63,9 @@ impl BinarySet {
             }
             row
         }
+    }
+
+    fn search(&self, target: &[u8]) -> Found {
+        self.index.search(|v| self.data_file.bytes(v).cmp(target))
     }
 }
