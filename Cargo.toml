@@ -1,6 +1,6 @@
 [package]
 name = "binary_set"
-version = "0.11.0"
+version = "0.11.1"
 edition = "2021"
 
 authors = ["Oden Shirataki <oden.srtk@gmail.com>"]
@@ -14,5 +14,5 @@ categories = ["algorithms", "caching", "filesystem"]
 license = "MIT/Apache-2.0"
 
 [dependencies]
-various_data_file = { version = "0.16.0" }
-idx_file = { version = "0.51.0" }
+various_data_file = { version = "0.16.1" }
+idx_file = { version = "0.52.0" }
