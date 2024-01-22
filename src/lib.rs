@@ -34,7 +34,7 @@ impl BinarySet {
     }
 
     /// Returns the value of the specified row. Returns None if the row does not exist.
-    pub fn bytes(&self, row: NonZeroU32) -> Option<&'static [u8]> {
+    pub fn bytes(&self, row: NonZeroU32) -> Option<&[u8]> {
         self.index.get(row).map(|v| self.data_file.bytes(v))
     }
 
