@@ -15,21 +15,9 @@ impl BinarySet {
     /// If you expect to add a lot of data, specifying a larger size will improve performance.
     pub fn new<P: AsRef<Path>>(path: P, allocation_lot: u32) -> Self {
         let path = path.as_ref();
-        let file_name = path.file_name().map_or("".into(), |f| f.to_string_lossy());
         Self {
-            index: IdxFile::new(
-                {
-                    let mut path = path.to_path_buf();
-                    path.set_file_name(&(file_name.to_string() + ".i"));
-                    path
-                },
-                allocation_lot,
-            ),
-            data_file: VariousDataFile::new({
-                let mut path = path.to_path_buf();
-                path.set_file_name(&(file_name.into_owned() + ".d"));
-                path
-            }),
+            index: IdxFile::new(path.with_extension("i"), allocation_lot),
+            data_file: VariousDataFile::new(path.with_extension("d")),
         }
     }
 
@@ -41,19 +29,14 @@ impl BinarySet {
     /// Search for a sequence of bytes.
     pub fn row(&self, content: &[u8]) -> Option<NonZeroU32> {
         let found = self.search(content);
-        if found.ord() == Ordering::Equal {
-            Some(found.row().unwrap())
-        } else {
-            None
-        }
+        (found.ord() == Ordering::Equal).then(|| found.row().unwrap())
     }
 
     /// Finds a sequence of bytes, inserts it if it doesn't exist, and returns a row.
     pub fn row_or_insert(&mut self, content: &[u8]) -> NonZeroU32 {
         let found = self.search(content);
-        let found_row = found.row();
-        if found.ord() == Ordering::Equal && found_row.is_some() {
-            found_row.unwrap()
+        if let (Ordering::Equal, Some(found_row)) = (found.ord(), found.row()) {
+            found_row
         } else {
             let row = unsafe { NonZeroU32::new_unchecked(self.index.rows_count() + 1) };
             unsafe {
