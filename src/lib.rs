@@ -29,7 +29,9 @@ impl BinarySet {
     /// Search for a sequence of bytes.
     pub fn row(&self, content: &[u8]) -> Option<NonZeroU32> {
         let found = self.search(content);
-        (found.ord() == Ordering::Equal).then(|| found.row().unwrap())
+        (found.ord() == Ordering::Equal)
+            .then(|| found.row())
+            .flatten()
     }
 
     /// Finds a sequence of bytes, inserts it if it doesn't exist, and returns a row.
