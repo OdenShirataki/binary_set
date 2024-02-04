@@ -1,12 +1,34 @@
-use std::{cmp::Ordering, num::NonZeroU32, path::Path};
+use std::{cmp::Ordering, num::NonZeroU32, ops::Deref, path::Path};
 
-use idx_file::{Found, IdxFile};
+use idx_file::{AvltrieeOrd, IdxFile, IdxFileAllocator, IdxFileAvlTriee};
 use various_data_file::{DataAddress, VariousDataFile};
 
+type BinaryIdxFile = IdxFile<DataAddress, [u8]>;
+
 pub struct BinarySet {
-    index: IdxFile<DataAddress>,
+    index: BinaryIdxFile,
     data_file: VariousDataFile,
 }
+
+impl Deref for BinarySet {
+    type Target = BinaryIdxFile;
+    fn deref(&self) -> &Self::Target {
+        &self.index
+    }
+}
+
+impl AsRef<IdxFileAvlTriee<DataAddress, [u8]>> for BinarySet {
+    fn as_ref(&self) -> &IdxFileAvlTriee<DataAddress, [u8]> {
+        self
+    }
+}
+
+impl AvltrieeOrd<DataAddress, [u8], IdxFileAllocator<DataAddress>> for BinarySet {
+    fn cmp(&self, left: &DataAddress, right: &[u8]) -> Ordering {
+        self.data_file.bytes(left).cmp(right)
+    }
+}
+
 impl BinarySet {
     /// Opens the file and creates the BinarySet.
     /// /// # Arguments
@@ -28,7 +50,7 @@ impl BinarySet {
 
     /// Search for a sequence of bytes.
     pub fn row(&self, content: &[u8]) -> Option<NonZeroU32> {
-        let found = self.search(content);
+        let found = self.search_edge(self, content);
         (found.ord() == Ordering::Equal)
             .then(|| found.row())
             .flatten()
@@ -36,7 +58,7 @@ impl BinarySet {
 
     /// Finds a sequence of bytes, inserts it if it doesn't exist, and returns a row.
     pub fn row_or_insert(&mut self, content: &[u8]) -> NonZeroU32 {
-        let found = self.search(content);
+        let found = self.search_edge(self, content);
         if let (Ordering::Equal, Some(found_row)) = (found.ord(), found.row()) {
             found_row
         } else {
@@ -50,9 +72,5 @@ impl BinarySet {
             }
             row
         }
-    }
-
-    fn search(&self, target: &[u8]) -> Found {
-        self.index.search(|v| self.data_file.bytes(v).cmp(target))
     }
 }
