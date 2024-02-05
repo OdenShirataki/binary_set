@@ -51,15 +51,13 @@ impl BinarySet {
     /// Search for a sequence of bytes.
     pub fn row(&self, content: &[u8]) -> Option<NonZeroU32> {
         let found = search::edge(self, content);
-        (found.ord() == Ordering::Equal)
-            .then(|| found.row())
-            .flatten()
+        (found.ord == Ordering::Equal).then(|| found.row).flatten()
     }
 
     /// Finds a sequence of bytes, inserts it if it doesn't exist, and returns a row.
     pub fn row_or_insert(&mut self, content: &[u8]) -> NonZeroU32 {
         let found = search::edge(self, content);
-        if let (Ordering::Equal, Some(found_row)) = (found.ord(), found.row()) {
+        if let (Ordering::Equal, Some(found_row)) = (found.ord, found.row) {
             found_row
         } else {
             let row = unsafe { NonZeroU32::new_unchecked(self.index.rows_count() + 1) };
