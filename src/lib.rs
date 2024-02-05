@@ -1,6 +1,6 @@
 use std::{cmp::Ordering, num::NonZeroU32, ops::Deref, path::Path};
 
-use idx_file::{AvltrieeOrd, IdxFile, IdxFileAllocator, IdxFileAvlTriee};
+use idx_file::{search, AvltrieeOrd, IdxFile, IdxFileAllocator, IdxFileAvlTriee};
 use various_data_file::{DataAddress, VariousDataFile};
 
 type BinaryIdxFile = IdxFile<DataAddress, [u8]>;
@@ -50,7 +50,7 @@ impl BinarySet {
 
     /// Search for a sequence of bytes.
     pub fn row(&self, content: &[u8]) -> Option<NonZeroU32> {
-        let found = self.search_edge(self, content);
+        let found = search::edge(self, content);
         (found.ord() == Ordering::Equal)
             .then(|| found.row())
             .flatten()
@@ -58,7 +58,7 @@ impl BinarySet {
 
     /// Finds a sequence of bytes, inserts it if it doesn't exist, and returns a row.
     pub fn row_or_insert(&mut self, content: &[u8]) -> NonZeroU32 {
-        let found = self.search_edge(self, content);
+        let found = search::edge(self, content);
         if let (Ordering::Equal, Some(found_row)) = (found.ord(), found.row()) {
             found_row
         } else {
